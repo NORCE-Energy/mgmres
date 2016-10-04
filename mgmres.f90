@@ -81,6 +81,8 @@ module mgmres
   implicit none
   private
   public pmgmres_ilu_cr
+  integer, parameter :: si = selected_int_kind (9)         ! short int
+  integer, parameter :: dp = selected_real_kind (15, 307)  ! double
 contains
 
 subroutine ax_cr ( n, nz_num, ia, ja, a, x, w )
@@ -89,33 +91,33 @@ subroutine ax_cr ( n, nz_num, ia, ja, a, x, w )
 !
 !  Parameters:
 !
-!    Input, integer ( kind = 4 ) N, the order of the system.
+!    Input N, the order of the system.
 !
-!    Input, integer ( kind = 4 ) NZ_NUM, the number of nonzeros.
+!    Input NZ_NUM, the number of nonzeros.
 !
-!    Input, integer ( kind = 4 ) IA(N+1), JA(NZ_NUM), the row and column
+!    Input IA(N+1), JA(NZ_NUM), the row and column
 !    indices of the matrix values.  The row vector has been compressed.
 !
-!    Input, real ( kind = 8 ) A(NZ_NUM), the matrix values.
+!    Input A(NZ_NUM), the matrix values.
 !
-!    Input, real ( kind = 8 ) X(N), the vector to be multiplied by A.
+!    Input X(N), the vector to be multiplied by A.
 !
-!    Output, real ( kind = 8 ) W(N), the value of A*X.
+!    Output W(N), the value of A*X.
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) nz_num
+  integer (kind=si) :: n
+  integer (kind=si) :: nz_num
 
-  real ( kind = 8 ) a(nz_num)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ia(n+1)
-  integer ( kind = 4 ) ja(nz_num)
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) k1
-  integer ( kind = 4 ) k2
-  real ( kind = 8 ) w(n)
-  real ( kind = 8 ) x(n)
+  real    (kind=dp) :: a(nz_num)
+  integer (kind=si) :: i
+  integer (kind=si) :: ia(n+1)
+  integer (kind=si) :: ja(nz_num)
+  integer (kind=si) :: k
+  integer (kind=si) :: k1
+  integer (kind=si) :: k2
+  real    (kind=dp) :: w(n)
+  real    (kind=dp) :: x(n)
 
   w(1:n) = 0.0D+00
 
@@ -134,28 +136,28 @@ subroutine diagonal_pointer_cr ( n, nz_num, ia, ja, ua )
 !
 !  Parameters:
 !
-!    Input, integer ( kind = 4 ) N, the order of the system.
+!    Input N, the order of the system.
 !
-!    Input, integer ( kind = 4 ) NZ_NUM, the number of nonzeros.
+!    Input NZ_NUM, the number of nonzeros.
 !
-!    Input, integer ( kind = 4 ) IA(N+1), JA(NZ_NUM), the row and column
+!    Input IA(N+1), JA(NZ_NUM), the row and column
 !    indices of the matrix values.  The row vector has been compressed.
 !    On output, the order of the entries of JA may have changed because of
 !    the sorting.
 !
-!    Output, integer ( kind = 4 ) UA(N), the index of the diagonal element
+!    Output UA(N), the index of the diagonal element
 !    of each row.
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) nz_num
+  integer (kind=si) :: n
+  integer (kind=si) :: nz_num
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ia(n+1)
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) ja(nz_num)
-  integer ( kind = 4 ) ua(n)
+  integer (kind=si) :: i
+  integer (kind=si) :: ia(n+1)
+  integer (kind=si) :: k
+  integer (kind=si) :: ja(nz_num)
+  integer (kind=si) :: ua(n)
 
   ua(1:n) = -1
 
@@ -176,38 +178,38 @@ subroutine ilu_cr ( n, nz_num, ia, ja, a, ua, l )
 !
 !  Parameters:
 !
-!    Input, integer ( kind = 4 ) N, the order of the system.
+!    Input N, the order of the system.
 !
-!    Input, integer ( kind = 4 ) NZ_NUM, the number of nonzeros.
+!    Input NZ_NUM, the number of nonzeros.
 !
-!    Input, integer ( kind = 4 ) IA(N+1), JA(NZ_NUM), the row and column
+!    Input IA(N+1), JA(NZ_NUM), the row and column
 !    indices of the matrix values.  The row vector has been compressed.
 !
-!    Input, real ( kind = 8 ) A(NZ_NUM), the matrix values.
+!    Input A(NZ_NUM), the matrix values.
 !
-!    Input, integer ( kind = 4 ) UA(N), the index of the diagonal element
+!    Input UA(N), the index of the diagonal element
 !    of each row.
 !
-!    Output, real ( kind = 8 ) L(NZ_NUM), the ILU factorization of A.
+!    Output L(NZ_NUM), the ILU factorization of A.
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) nz_num
+  integer (kind=si) :: n
+  integer (kind=si) :: nz_num
 
-  real ( kind = 8 ) a(nz_num)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ia(n+1)
-  integer ( kind = 4 ) iw(n)
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) ja(nz_num)
-  integer ( kind = 4 ) jj
-  integer ( kind = 4 ) jrow
-  integer ( kind = 4 ) jw
-  integer ( kind = 4 ) k
-  real ( kind = 8 ) l(nz_num)
-  real ( kind = 8 ) tl
-  integer ( kind = 4 ) ua(n)
+  real    (kind=dp) :: a(nz_num)
+  integer (kind=si) :: i
+  integer (kind=si) :: ia(n+1)
+  integer (kind=si) :: iw(n)
+  integer (kind=si) :: j
+  integer (kind=si) :: ja(nz_num)
+  integer (kind=si) :: jj
+  integer (kind=si) :: jrow
+  integer (kind=si) :: jw
+  integer (kind=si) :: k
+  real    (kind=dp) :: l(nz_num)
+  real    (kind=dp) :: tl
+  integer (kind=si) :: ua(n)
 !
 !  Copy A.
 !
@@ -272,36 +274,36 @@ subroutine lus_cr ( n, nz_num, ia, ja, l, ua, r, z )
 !
 !  Parameters:
 !
-!    Input, integer ( kind = 4 ) N, the order of the system.
+!    Input N, the order of the system.
 !
-!    Input, integer ( kind = 4 ) NZ_NUM, the number of nonzeros.
+!    Input NZ_NUM, the number of nonzeros.
 !
-!    Input, integer ( kind = 4 ) IA(N+1), JA(NZ_NUM), the row and column
+!    Input IA(N+1), JA(NZ_NUM), the row and column
 !    indices of the matrix values.  The row vector has been compressed.
 !
-!    Input, real ( kind = 8 ) L(NZ_NUM), the matrix values.
+!    Input L(NZ_NUM), the matrix values.
 !
-!    Input, integer ( kind = 4 ) UA(N), the index of the diagonal element
+!    Input UA(N), the index of the diagonal element
 !    of each row.
 !
-!    Input, real ( kind = 8 ) R(N), the right hand side.
+!    Input R(N), the right hand side.
 !
-!    Output, real ( kind = 8 ) Z(N), the solution of the system M * Z = R.
+!    Output Z(N), the solution of the system M * Z = R.
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) nz_num
+  integer (kind=si) :: n
+  integer (kind=si) :: nz_num
 
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ia(n+1)
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) ja(nz_num)
-  real ( kind = 8 ) l(nz_num)
-  real ( kind = 8 ) r(n)
-  integer ( kind = 4 ) ua(n)
-  real ( kind = 8 ) w(n)
-  real ( kind = 8 ) z(n)
+  integer (kind=si) :: i
+  integer (kind=si) :: ia(n+1)
+  integer (kind=si) :: j
+  integer (kind=si) :: ja(nz_num)
+  real    (kind=dp) :: l(nz_num)
+  real    (kind=dp) :: r(n)
+  integer (kind=si) :: ua(n)
+  real    (kind=dp) :: w(n)
+  real    (kind=dp) :: z(n)
 !
 !  Copy R in.
 !
@@ -342,24 +344,24 @@ subroutine mult_givens ( c, s, k, g )
 !
 !  Parameters:
 !
-!    Input, real ( kind = 8 ) C, S, the cosine and sine of a Givens
+!    Input C, S, the cosine and sine of a Givens
 !    rotation.
 !
-!    Input, integer ( kind = 4 ) K, indicates the location of the first
+!    Input K, indicates the location of the first
 !    vector entry.
 !
-!    Input/output, real ( kind = 8 ) G(1:K+1), the vector to be modified.
+!    Input/output G(1:K+1), the vector to be modified.
 !    On output, the Givens rotation has been applied to entries G(K) and G(K+1).
 !
   implicit none
 
-  integer ( kind = 4 ) k
+  integer (kind=si) :: k
 
-  real ( kind = 8 ) c
-  real ( kind = 8 ) g(1:k+1)
-  real ( kind = 8 ) g1
-  real ( kind = 8 ) g2
-  real ( kind = 8 ) s
+  real    (kind=dp) :: c
+  real    (kind=dp) :: g(1:k+1)
+  real    (kind=dp) :: g1
+  real    (kind=dp) :: g2
+  real    (kind=dp) :: s
 
   g1 = c * g(k) - s * g(k+1)
   g2 = s * g(k) + c * g(k+1)
@@ -377,68 +379,68 @@ subroutine pmgmres_ilu_cr ( n, nz_num, ia, ja, a, x, rhs, itr_max, mr, &
 !
 !  Parameters:
 !
-!    Input, integer ( kind = 4 ) N, the order of the linear system.
+!    Input N, the order of the linear system.
 !
-!    Input, integer ( kind = 4 ) NZ_NUM, the number of nonzero matrix values.
+!    Input NZ_NUM, the number of nonzero matrix values.
 !
-!    Input, integer ( kind = 4 ) IA(N+1), JA(NZ_NUM), the row and column indices
+!    Input IA(N+1), JA(NZ_NUM), the row and column indices
 !    of the matrix values.  The row vector has been compressed.
 !
-!    Input, real ( kind = 8 ) A(NZ_NUM), the matrix values.
+!    Input A(NZ_NUM), the matrix values.
 !
-!    Input/output, real ( kind = 8 ) X(N); on input, an approximation to
+!    Input/output X(N); on input, an approximation to
 !    the solution.  On output, an improved approximation.
 !
-!    Input, real ( kind = 8 ) RHS(N), the right hand side of the linear system.
+!    Input RHS(N), the right hand side of the linear system.
 !
-!    Input, integer ( kind = 4 ) ITR_MAX, the maximum number of (outer) 
+!    Input ITR_MAX, the maximum number of (outer) 
 !    iterations to take.
 !
-!    Input, integer ( kind = 4 ) MR, the maximum number of (inner) iterations 
+!    Input MR, the maximum number of (inner) iterations 
 !    to take.  MR must be less than N.
 !
-!    Input, real ( kind = 8 ) TOL_ABS, an absolute tolerance applied to the
+!    Input TOL_ABS, an absolute tolerance applied to the
 !    current residual.
 !
-!    Input, real ( kind = 8 ) TOL_REL, a relative tolerance comparing the
+!    Input TOL_REL, a relative tolerance comparing the
 !    current residual to the initial residual.
 !
   implicit none
 
-  integer ( kind = 4 ) mr
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) nz_num
+  integer (kind=si) :: mr
+  integer (kind=si) :: n
+  integer (kind=si) :: nz_num
 
-  real ( kind = 8 ) a(nz_num)
-  real ( kind = 8 ) av
-  real ( kind = 8 ) c(mr+1)
-  real ( kind = 8 ), parameter :: delta = 1.0D-03
-  real ( kind = 8 ) g(mr+1)
-  real ( kind = 8 ) h(mr+1,mr)
-  real ( kind = 8 ) htmp
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ia(n+1)
-  integer ( kind = 4 ) itr
-  integer ( kind = 4 ) itr_max
-  integer ( kind = 4 ) itr_used
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) ja(nz_num)
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) k_copy
-  real ( kind = 8 ) l(ia(n+1)+1)
-  real ( kind = 8 ) mu
-  real ( kind = 8 ) r(n)
-  real ( kind = 8 ) rho
-  real ( kind = 8 ) rho_tol
-  real ( kind = 8 ) rhs(n)
-  real ( kind = 8 ) s(mr+1)
-  real ( kind = 8 ) tol_abs
-  real ( kind = 8 ) tol_rel
-  integer ( kind = 4 ) ua(n)
-  real ( kind = 8 ) v(n,mr+1);
+  real    (kind=dp) :: a(nz_num)
+  real    (kind=dp) :: av
+  real    (kind=dp) :: c(mr+1)
+  real    (kind=dp), parameter :: delta = 1.0D-03
+  real    (kind=dp) :: g(mr+1)
+  real    (kind=dp) :: h(mr+1,mr)
+  real    (kind=dp) :: htmp
+  integer (kind=si) :: i
+  integer (kind=si) :: ia(n+1)
+  integer (kind=si) :: itr
+  integer (kind=si) :: itr_max
+  integer (kind=si) :: itr_used
+  integer (kind=si) :: j
+  integer (kind=si) :: ja(nz_num)
+  integer (kind=si) :: k
+  integer (kind=si) :: k_copy
+  real    (kind=dp) :: l(ia(n+1)+1)
+  real    (kind=dp) :: mu
+  real    (kind=dp) :: r(n)
+  real    (kind=dp) :: rho
+  real    (kind=dp) :: rho_tol
+  real    (kind=dp) :: rhs(n)
+  real    (kind=dp) :: s(mr+1)
+  real    (kind=dp) :: tol_abs
+  real    (kind=dp) :: tol_rel
+  integer (kind=si) :: ua(n)
+  real    (kind=dp) :: v(n,mr+1);
   logical, parameter :: verbose = .true.
-  real ( kind = 8 ) x(n)
-  real ( kind = 8 ) y(mr+1)
+  real    (kind=dp) :: x(n)
+  real    (kind=dp) :: y(mr+1)
 
   itr_used = 0
 
@@ -573,31 +575,31 @@ subroutine rearrange_cr ( n, nz_num, ia, ja, a )
 !
 !  Parameters:
 !
-!    Input, integer ( kind = 4 ) N, the order of the system.
+!    Input N, the order of the system.
 !
-!    Input, integer ( kind = 4 ) NZ_NUM, the number of nonzeros.
+!    Input NZ_NUM, the number of nonzeros.
 !
-!    Input, integer ( kind = 4 ) IA(N+1), the compressed row indices.
+!    Input IA(N+1), the compressed row indices.
 !
-!    Input/output, integer ( kind = 4 ) JA(NZ_NUM), the column indices.
+!    Input/output JA(NZ_NUM), the column indices.
 !    On output, these may have been rearranged by the sorting.
 !
-!    Input/output, real ( kind = 8 ) A(NZ_NUM), the matrix values.  On output,
+!    Input/output A(NZ_NUM), the matrix values.  On output,
 !    the matrix values may have been moved somewhat because of the sorting.
 !
   implicit none
 
-  integer ( kind = 4 ) n
-  integer ( kind = 4 ) nz_num
+  integer (kind=si) :: n
+  integer (kind=si) :: nz_num
 
-  real ( kind = 8 ) a(nz_num)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ia(n+1)
-  integer ( kind = 4 ) i4temp
-  integer ( kind = 4 ) ja(nz_num)
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) l
-  real ( kind = 8 ) r8temp
+  real    (kind=dp) :: a(nz_num)
+  integer (kind=si) :: i
+  integer (kind=si) :: ia(n+1)
+  integer (kind=si) :: i4temp
+  integer (kind=si) :: ja(nz_num)
+  integer (kind=si) :: k
+  integer (kind=si) :: l
+  real    (kind=dp) :: r8temp
 
   do i = 1, n
 

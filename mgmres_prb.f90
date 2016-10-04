@@ -35,9 +35,7 @@ program main
   write ( *, '(a)' ) 'MGMRES_PRB:'
   write ( *, '(a)' ) '  Normal end of execution.'
   write ( *, '(a)' ) ' '
-
-  stop
-end
+end program
 
 subroutine test03 ( )
 !*****************************************************************************80
@@ -70,24 +68,26 @@ subroutine test03 ( )
   use mgmres
   implicit none
 
-  integer ( kind = 4 ), parameter :: n = 20
-  integer ( kind = 4 ), parameter :: nz_num = ( 3 * n - 2 )
+  integer, parameter :: si = selected_int_kind (9)         ! short int
+  integer, parameter :: dp = selected_real_kind (15, 307)  ! double
+  integer (kind=si), parameter :: n = 20
+  integer (kind=si), parameter :: nz_num = ( 3 * n - 2 )
 
-  real ( kind = 8 ) a(nz_num)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ) ia(n+1)
-  integer ( kind = 4 ) itr_max
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ) ja(nz_num)
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) mr
-  real ( kind = 8 ) rhs(n)
-  integer ( kind = 4 ) test
-  real ( kind = 8 ) tol_abs
-  real ( kind = 8 ) tol_rel
-  real ( kind = 8 ) x_error
-  real ( kind = 8 ) x_estimate(n)
-  real ( kind = 8 ) x_exact(n)
+  real    (kind=dp) a(nz_num)
+  integer (kind=si) i
+  integer (kind=si) ia(n+1)
+  integer (kind=si) itr_max
+  integer (kind=si) j
+  integer (kind=si) ja(nz_num)
+  integer (kind=si) k
+  integer (kind=si) mr
+  real    (kind=dp) rhs(n)
+  integer (kind=si) test
+  real    (kind=dp) tol_abs
+  real    (kind=dp) tol_rel
+  real    (kind=dp) x_error
+  real    (kind=dp) x_estimate(n)
+  real    (kind=dp) x_exact(n)
 
   write ( *, '(a)' ) ' '
   write ( *, '(a)' ) 'TEST03'
@@ -206,35 +206,37 @@ subroutine test04 ( )
   use mgmres
   implicit none
 
-  integer ( kind = 4 ), parameter :: n = 5
-  integer ( kind = 4 ), parameter :: nz_num = 9
+  integer, parameter :: si = selected_int_kind (9)         ! short int
+  integer, parameter :: dp = selected_real_kind (15, 307)  ! double
+  integer (kind=si), parameter :: n = 5
+  integer (kind=si), parameter :: nz_num = 9
 
-  real ( kind = 8 ), dimension ( nz_num ) :: a = (/ &
+  real    (kind=dp), dimension ( nz_num ) :: a = (/ &
      1.0, 2.0, 1.0, &
      2.0, &
      3.0, 3.0, &
      4.0, &
      1.0, 5.0 /)
-  integer ( kind = 4 ) i
-  integer ( kind = 4 ), dimension ( n + 1 ) :: ia = (/ 1, 4, 5, 7, 8, 10 /)
-  integer ( kind = 4 ) itr_max
-  integer ( kind = 4 ) j
-  integer ( kind = 4 ), dimension ( nz_num ) :: ja = (/ &
+  integer (kind=si) i
+  integer (kind=si), dimension ( n + 1 ) :: ia = (/ 1, 4, 5, 7, 8, 10 /)
+  integer (kind=si) itr_max
+  integer (kind=si) j
+  integer (kind=si), dimension ( nz_num ) :: ja = (/ &
     1, 4, 5, &
     2, &
     1, 3, &
     4, &
     2, 5 /)
-  integer ( kind = 4 ) k
-  integer ( kind = 4 ) mr
-  real ( kind = 8 ), dimension ( n ) :: rhs = (/ &
+  integer (kind=si) k
+  integer (kind=si) mr
+  real    (kind=dp), dimension ( n ) :: rhs = (/ &
     14.0, 4.0, 12.0, 16.0, 27.0 /)
-  integer ( kind = 4 ) test
-  real ( kind = 8 ) tol_abs
-  real ( kind = 8 ) tol_rel
-  real ( kind = 8 ) x_error
-  real ( kind = 8 ) x_estimate(n)
-  real ( kind = 8 ), dimension ( n ) :: x_exact = (/ 1.0, 2.0, 3.0, 4.0, 5.0 /)
+  integer (kind=si) test
+  real    (kind=dp) tol_abs
+  real    (kind=dp) tol_rel
+  real    (kind=dp) x_error
+  real    (kind=dp) x_estimate(n)
+  real    (kind=dp), dimension ( n ) :: x_exact = (/ 1.0, 2.0, 3.0, 4.0, 5.0 /)
 
   write ( *, '(a)' ) ' '
   write ( *, '(a)' ) 'TEST04'
