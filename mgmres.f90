@@ -1,7 +1,5 @@
-subroutine ax_cr ( n, nz_num, ia, ja, a, x, w )
-!*****************************************************************************80
-!
-!! AX_CR computes A*x for a matrix stored in sparse compressed row form.
+!  MGMRES is a FORTRAN90 library which applies the restarted Generalized Minimum
+!  Residual (GMRES) algorithm to solve a sparse linear system.
 !
 !  Discussion:
 !
@@ -14,18 +12,47 @@ subroutine ax_cr ( n, nz_num, ia, ja, a, x, w )
 !    the entries in A and JA that correspond to row I occur in indices
 !    IA[I] through IA[I+1]-1.
 !
+!    * A(1:NZ_NUM),  the value of the entry;
+!    * IA(1:N+1),    row I values occur in entries IA(I) to IA(I+1)-1;
+!    * JA(1:NZ_NUM), the column of the entry;
+!
+!    It is assumed that every row of the matrix includes a diagonal element,
+!    and that the elements of each row have been ascending sorted.
+!
+!    The routine REARRANGE_CR guarantees that the entries in the CR matrix
+!    are properly sorted.
+!
+!    After the sorting, the entries of the matrix are rearranged in such
+!    a way that the entries of each column are listed in ascending order
+!    of their column values.
+!
+!    This routine uses the incomplete LU decomposition for the
+!    preconditioning.  This preconditioner requires that the sparse
+!    matrix data structure supplies a storage position for each diagonal
+!    element of the matrix A, and that each diagonal element of the
+!    matrix A is not zero.
+!
+!    The array UA can be used to locate the diagonal elements of the matrix.
+!
+!    The linear system M * Z = R is solved for Z.  M is the incomplete
+!    LU preconditioner matrix, and R is a vector supplied by the user.
+!    So essentially, we're solving L * U * Z = R.
+!
+!  Last modified:
+!
+!    28 August 2012
+!
 !  Licensing:
 !
 !    This code is distributed under the GNU LGPL license.
-!
-!  Modified:
-!
-!    17 July 2007
 !
 !  Author:
 !
 !    Original C version by Lili Ju.
 !    FORTRAN90 version by John Burkardt.
+!
+!    Thanks to Jesus Pueblas Sanchez-Guerra for supplying two
+!    corrections to the code on 31 May 2007.
 !
 !  Reference:
 !
@@ -50,6 +77,10 @@ subroutine ax_cr ( n, nz_num, ia, ja, a, x, w )
 !    SIAM, 2003,
 !    ISBN: 0898715342,
 !    LC: QA188.S17.
+
+subroutine ax_cr ( n, nz_num, ia, ja, a, x, w )
+!*****************************************************************************80
+!! AX_CR computes A*x for a matrix stored in sparse compressed row form.
 !
 !  Parameters:
 !
@@ -94,35 +125,7 @@ end
 
 subroutine diagonal_pointer_cr ( n, nz_num, ia, ja, ua )
 !*****************************************************************************80
-!
 !! DIAGONAL_POINTER_CR finds diagonal entries in a sparse compressed row matrix.
-!
-!  Discussion:
-!
-!    The matrix A is assumed to be stored in compressed row format.  Only
-!    the nonzero entries of A are stored.  The vector JA stores the
-!    column index of the nonzero value.  The nonzero values are sorted
-!    by row, and the compressed row vector IA then has the property that
-!    the entries in A and JA that correspond to row I occur in indices
-!    IA[I] through IA[I+1]-1.
-!
-!    The array UA can be used to locate the diagonal elements of the matrix.
-!
-!    It is assumed that every row of the matrix includes a diagonal element,
-!    and that the elements of each row have been ascending sorted.
-!
-!  Licensing:
-!
-!    This code is distributed under the GNU LGPL license.
-!
-!  Modified:
-!
-!    18 July 2007
-!
-!  Author:
-!
-!    Original C version by Lili Ju.
-!    FORTRAN90 version by John Burkardt.
 !
 !  Parameters:
 !
@@ -164,30 +167,7 @@ end
 
 subroutine ilu_cr ( n, nz_num, ia, ja, a, ua, l )
 !*****************************************************************************80
-!
 !! ILU_CR computes the incomplete LU factorization of a matrix.
-!
-!  Discussion:
-!
-!    The matrix A is assumed to be stored in compressed row format.  Only
-!    the nonzero entries of A are stored.  The vector JA stores the
-!    column index of the nonzero value.  The nonzero values are sorted
-!    by row, and the compressed row vector IA then has the property that
-!    the entries in A and JA that correspond to row I occur in indices
-!    IA(I) through IA(I+1)-1.
-!
-!  Licensing:
-!
-!    This code is distributed under the GNU LGPL license.
-!
-!  Modified:
-!
-!    27 July 2007
-!
-!  Author:
-!
-!    Original C version by Lili Ju.
-!    FORTRAN90 version by John Burkardt.
 !
 !  Parameters:
 !
@@ -283,34 +263,7 @@ end
 
 subroutine lus_cr ( n, nz_num, ia, ja, l, ua, r, z )
 !*****************************************************************************80
-!
 !! LUS_CR applies the incomplete LU preconditioner.
-!
-!  Discussion:
-!
-!    The linear system M * Z = R is solved for Z.  M is the incomplete
-!    LU preconditioner matrix, and R is a vector supplied by the user.
-!    So essentially, we're solving L * U * Z = R.
-!
-!    The matrix A is assumed to be stored in compressed row format.  Only
-!    the nonzero entries of A are stored.  The vector JA stores the
-!    column index of the nonzero value.  The nonzero values are sorted
-!    by row, and the compressed row vector IA then has the property that
-!    the entries in A and JA that correspond to row I occur in indices
-!    IA(I) through IA(I+1)-1.
-!
-!  Licensing:
-!
-!    This code is distributed under the GNU LGPL license.
-!
-!  Modified:
-!
-!    18 July 2007
-!
-!  Author:
-!
-!    Original C version by Lili Ju.
-!    FORTRAN90 version by John Burkardt.
 !
 !  Parameters:
 !
@@ -375,50 +328,12 @@ end
 
 subroutine mult_givens ( c, s, k, g )
 !*****************************************************************************80
-!
 !! MULT_GIVENS applies a Givens rotation to two successive entries of a vector.
 !
 !  Discussion:
 !
 !    In order to make it easier to compare this code with the Original C,
 !    the vector indexing is 0-based.
-!
-!  Licensing:
-!
-!    This code is distributed under the GNU LGPL license.
-!
-!  Modified:
-!
-!    08 August 2006
-!
-!  Author:
-!
-!    Original C version by Lili Ju.
-!    FORTRAN90 version by John Burkardt.
-!
-!  Reference:
-!
-!    Richard Barrett, Michael Berry, Tony Chan, James Demmel,
-!    June Donato, Jack Dongarra, Victor Eijkhout, Roidan Pozo,
-!    Charles Romine, Henk van der Vorst,
-!    Templates for the Solution of Linear Systems:
-!    Building Blocks for Iterative Methods,
-!    SIAM, 1994.
-!    ISBN: 0898714710,
-!    LC: QA297.8.T45.
-!
-!    Tim Kelley,
-!    Iterative Methods for Linear and Nonlinear Equations,
-!    SIAM, 2004,
-!    ISBN: 0898713528,
-!    LC: QA297.8.K45.
-!
-!    Yousef Saad,
-!    Iterative Methods for Sparse Linear Systems,
-!    Second Edition,
-!    SIAM, 2003,
-!    ISBN: 0898715342,
-!    LC: QA188.S17.
 !
 !  Parameters:
 !
@@ -453,63 +368,7 @@ end
 subroutine pmgmres_ilu_cr ( n, nz_num, ia, ja, a, x, rhs, itr_max, mr, &
   tol_abs, tol_rel )
 !*****************************************************************************80
-!
 !! PMGMRES_ILU_CR applies the preconditioned restarted GMRES algorithm.
-!
-!  Discussion:
-!
-!    The matrix A is assumed to be stored in compressed row format.  Only
-!    the nonzero entries of A are stored.  The vector JA stores the
-!    column index of the nonzero value.  The nonzero values are sorted
-!    by row, and the compressed row vector IA then has the property that
-!    the entries in A and JA that correspond to row I occur in indices
-!    IA(I) through IA(I+1)-1.
-!
-!    This routine uses the incomplete LU decomposition for the
-!    preconditioning.  This preconditioner requires that the sparse
-!    matrix data structure supplies a storage position for each diagonal
-!    element of the matrix A, and that each diagonal element of the
-!    matrix A is not zero.
-!
-!    Thanks to Jesus Pueblas Sanchez-Guerra for supplying two
-!    corrections to the code on 31 May 2007.
-!
-!  Licensing:
-!
-!    This code is distributed under the GNU LGPL license. 
-!
-!  Modified:
-!
-!    28 August 2012
-!
-!  Author:
-!
-!    Original C version by Lili Ju.
-!    FORTRAN90 version by John Burkardt.
-!
-!  Reference:
-!
-!    Richard Barrett, Michael Berry, Tony Chan, James Demmel,
-!    June Donato, Jack Dongarra, Victor Eijkhout, Roidan Pozo,
-!    Charles Romine, Henk van der Vorst,
-!    Templates for the Solution of Linear Systems:
-!    Building Blocks for Iterative Methods,
-!    SIAM, 1994.
-!    ISBN: 0898714710,
-!    LC: QA297.8.T45.
-!
-!    Tim Kelley,
-!    Iterative Methods for Linear and Nonlinear Equations,
-!    SIAM, 2004,
-!    ISBN: 0898713528,
-!    LC: QA297.8.K45.
-!
-!    Yousef Saad,
-!    Iterative Methods for Sparse Linear Systems,
-!    Second Edition,
-!    SIAM, 2003,
-!    ISBN: 0898715342,
-!    LC: QA188.S17.
 !
 !  Parameters:
 !
@@ -705,61 +564,7 @@ end
 
 subroutine rearrange_cr ( n, nz_num, ia, ja, a )
 !*****************************************************************************80
-!
 !! REARRANGE_CR sorts a sparse compressed row matrix.
-!
-!  Discussion:
-!
-!    This routine guarantees that the entries in the CR matrix
-!    are properly sorted.
-!
-!    After the sorting, the entries of the matrix are rearranged in such
-!    a way that the entries of each column are listed in ascending order
-!    of their column values.
-!
-!    The matrix A is assumed to be stored in compressed row format.  Only
-!    the nonzero entries of A are stored.  The vector JA stores the
-!    column index of the nonzero value.  The nonzero values are sorted
-!    by row, and the compressed row vector IA then has the property that
-!    the entries in A and JA that correspond to row I occur in indices
-!    IA(I) through IA(I+1)-1.
-!
-!  Licensing:
-!
-!    This code is distributed under the GNU LGPL license.
-!
-!  Modified:
-!
-!    17 July 2007
-!
-!  Author:
-!
-!    Original C version by Lili Ju.
-!    FORTRAN90 version by John Burkardt.
-!
-!  Reference:
-!
-!    Richard Barrett, Michael Berry, Tony Chan, James Demmel,
-!    June Donato, Jack Dongarra, Victor Eijkhout, Roidan Pozo,
-!    Charles Romine, Henk van der Vorst,
-!    Templates for the Solution of Linear Systems:
-!    Building Blocks for Iterative Methods,
-!    SIAM, 1994.
-!    ISBN: 0898714710,
-!    LC: QA297.8.T45.
-!
-!    Tim Kelley,
-!    Iterative Methods for Linear and Nonlinear Equations,
-!    SIAM, 2004,
-!    ISBN: 0898713528,
-!    LC: QA297.8.K45.
-!
-!    Yousef Saad,
-!    Iterative Methods for Sparse Linear Systems,
-!    Second Edition,
-!    SIAM, 2003,
-!    ISBN: 0898715342,
-!    LC: QA188.S17.
 !
 !  Parameters:
 !
