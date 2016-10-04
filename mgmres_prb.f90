@@ -67,6 +67,7 @@ subroutine test03 ( )
 !
 !    John Burkardt
 !
+  use mgmres
   implicit none
 
   integer ( kind = 4 ), parameter :: n = 20
@@ -202,6 +203,7 @@ subroutine test04 ( )
 !
 !    John Burkardt
 !
+  use mgmres
   implicit none
 
   integer ( kind = 4 ), parameter :: n = 5

@@ -77,6 +77,11 @@
 !    SIAM, 2003,
 !    ISBN: 0898715342,
 !    LC: QA188.S17.
+module mgmres
+  implicit none
+  private
+  public pmgmres_ilu_cr
+contains
 
 subroutine ax_cr ( n, nz_num, ia, ja, a, x, w )
 !*****************************************************************************80
@@ -121,7 +126,7 @@ subroutine ax_cr ( n, nz_num, ia, ja, a, x, w )
   end do
 
   return
-end
+end subroutine ax_cr
 
 subroutine diagonal_pointer_cr ( n, nz_num, ia, ja, ua )
 !*****************************************************************************80
@@ -163,7 +168,7 @@ subroutine diagonal_pointer_cr ( n, nz_num, ia, ja, ua )
   end do
 
   return
-end
+end subroutine diagonal_pointer_cr
 
 subroutine ilu_cr ( n, nz_num, ia, ja, a, ua, l )
 !*****************************************************************************80
@@ -259,7 +264,7 @@ subroutine ilu_cr ( n, nz_num, ia, ja, a, ua, l )
   l(ua(1:n)) = 1.0D+00 / l(ua(1:n))
 
   return
-end
+end subroutine ilu_cr
 
 subroutine lus_cr ( n, nz_num, ia, ja, l, ua, r, z )
 !*****************************************************************************80
@@ -324,7 +329,7 @@ subroutine lus_cr ( n, nz_num, ia, ja, l, ua, r, z )
   z(1:n) = w(1:n)
 
   return
-end
+end subroutine lus_cr
 
 subroutine mult_givens ( c, s, k, g )
 !*****************************************************************************80
@@ -363,7 +368,7 @@ subroutine mult_givens ( c, s, k, g )
   g(k+1) = g2
 
   return
-end
+end subroutine mult_givens
 
 subroutine pmgmres_ilu_cr ( n, nz_num, ia, ja, a, x, rhs, itr_max, mr, &
   tol_abs, tol_rel )
@@ -560,7 +565,7 @@ subroutine pmgmres_ilu_cr ( n, nz_num, ia, ja, a, x, rhs, itr_max, mr, &
   end if
 
   return
-end
+end subroutine pmgmres_ilu_cr
 
 subroutine rearrange_cr ( n, nz_num, ia, ja, a )
 !*****************************************************************************80
@@ -615,4 +620,6 @@ subroutine rearrange_cr ( n, nz_num, ia, ja, a )
   end do
 
   return
-end
+end subroutine rearrange_cr
+
+end module mgmres
