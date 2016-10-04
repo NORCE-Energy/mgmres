@@ -91,33 +91,33 @@ subroutine ax_cr ( n, nz_num, ia, ja, a, x, w )
 !
 !  Parameters:
 !
-!    Input N, the order of the system.
+!    N, the order of the system.
 !
-!    Input NZ_NUM, the number of nonzeros.
+!    NZ_NUM, the number of nonzeros.
 !
-!    Input IA(N+1), JA(NZ_NUM), the row and column
+!    IA(N+1), JA(NZ_NUM), the row and column
 !    indices of the matrix values.  The row vector has been compressed.
 !
-!    Input A(NZ_NUM), the matrix values.
+!    A(NZ_NUM), the matrix values.
 !
-!    Input X(N), the vector to be multiplied by A.
+!    X(N), the vector to be multiplied by A.
 !
-!    Output W(N), the value of A*X.
+!    W(N), the value of A*X.
 !
   implicit none
 
-  integer (kind=si) :: n
-  integer (kind=si) :: nz_num
-
-  real    (kind=dp) :: a(nz_num)
+  integer (kind=si), intent (in)  :: n
+  integer (kind=si), intent (in)  :: nz_num
+  integer (kind=si), intent (in)  :: ia(n+1)
+  integer (kind=si), intent (in)  :: ja(nz_num)
+  real    (kind=dp), intent (in)  :: a(nz_num)
+  real    (kind=dp), intent (in)  :: x(n)
+  real    (kind=dp), intent (out) :: w(n)
+  
   integer (kind=si) :: i
-  integer (kind=si) :: ia(n+1)
-  integer (kind=si) :: ja(nz_num)
   integer (kind=si) :: k
   integer (kind=si) :: k1
   integer (kind=si) :: k2
-  real    (kind=dp) :: w(n)
-  real    (kind=dp) :: x(n)
 
   w(1:n) = 0.0D+00
 
@@ -140,24 +140,23 @@ subroutine diagonal_pointer_cr ( n, nz_num, ia, ja, ua )
 !
 !    Input NZ_NUM, the number of nonzeros.
 !
-!    Input IA(N+1), JA(NZ_NUM), the row and column
-!    indices of the matrix values.  The row vector has been compressed.
+!    IA(N+1), JA(NZ_NUM), the row and column indices of the matrix values.
+!    The row vector has been compressed.
 !    On output, the order of the entries of JA may have changed because of
 !    the sorting.
 !
-!    Output UA(N), the index of the diagonal element
-!    of each row.
+!    UA(N), the index of the diagonal element of each row.
 !
   implicit none
 
-  integer (kind=si) :: n
-  integer (kind=si) :: nz_num
+  integer (kind=si), intent (in)  :: n
+  integer (kind=si), intent (in)  :: nz_num
+  integer (kind=si), intent (in)  :: ia(n+1)
+  integer (kind=si), intent (in)  :: ja(nz_num)
+  integer (kind=si), intent (out) :: ua(n)
 
   integer (kind=si) :: i
-  integer (kind=si) :: ia(n+1)
   integer (kind=si) :: k
-  integer (kind=si) :: ja(nz_num)
-  integer (kind=si) :: ua(n)
 
   ua(1:n) = -1
 
@@ -178,38 +177,37 @@ subroutine ilu_cr ( n, nz_num, ia, ja, a, ua, l )
 !
 !  Parameters:
 !
-!    Input N, the order of the system.
+!    N, the order of the system.
 !
-!    Input NZ_NUM, the number of nonzeros.
+!    NZ_NUM, the number of nonzeros.
 !
-!    Input IA(N+1), JA(NZ_NUM), the row and column
-!    indices of the matrix values.  The row vector has been compressed.
+!    IA(N+1), JA(NZ_NUM), the row and column indices of the matrix values.
+!    The row vector has been compressed.
 !
-!    Input A(NZ_NUM), the matrix values.
+!    A(NZ_NUM), the matrix values.
 !
-!    Input UA(N), the index of the diagonal element
-!    of each row.
+!    UA(N), the index of the diagonal element of each row.
 !
-!    Output L(NZ_NUM), the ILU factorization of A.
+!    L(NZ_NUM), the ILU factorization of A.
 !
   implicit none
 
-  integer (kind=si) :: n
-  integer (kind=si) :: nz_num
+  integer (kind=si), intent (in)    :: n
+  integer (kind=si), intent (in)    :: nz_num
+  integer (kind=si), intent (in)    :: ia(n+1)
+  integer (kind=si), intent (in)    :: ja(nz_num)
+  real    (kind=dp), intent (in)    :: a(nz_num)
+  integer (kind=si), intent (inout) :: ua(n)
+  real    (kind=dp), intent (out)   :: l(nz_num)
 
-  real    (kind=dp) :: a(nz_num)
   integer (kind=si) :: i
-  integer (kind=si) :: ia(n+1)
   integer (kind=si) :: iw(n)
   integer (kind=si) :: j
-  integer (kind=si) :: ja(nz_num)
   integer (kind=si) :: jj
   integer (kind=si) :: jrow
   integer (kind=si) :: jw
   integer (kind=si) :: k
-  real    (kind=dp) :: l(nz_num)
   real    (kind=dp) :: tl
-  integer (kind=si) :: ua(n)
 !
 !  Copy A.
 !
@@ -292,18 +290,18 @@ subroutine lus_cr ( n, nz_num, ia, ja, l, ua, r, z )
 !
   implicit none
 
-  integer (kind=si) :: n
-  integer (kind=si) :: nz_num
+  integer (kind=si), intent (in)  :: n
+  integer (kind=si), intent (in)  :: nz_num
+  integer (kind=si), intent (in)  :: ia(n+1)
+  integer (kind=si), intent (in)  :: ja(nz_num)
+  real    (kind=dp), intent (in)  :: l(nz_num)
+  integer (kind=si), intent (in)  :: ua(n)
+  real    (kind=dp), intent (in)  :: r(n)
+  real    (kind=dp), intent (out) :: z(n)
 
   integer (kind=si) :: i
-  integer (kind=si) :: ia(n+1)
   integer (kind=si) :: j
-  integer (kind=si) :: ja(nz_num)
-  real    (kind=dp) :: l(nz_num)
-  real    (kind=dp) :: r(n)
-  integer (kind=si) :: ua(n)
   real    (kind=dp) :: w(n)
-  real    (kind=dp) :: z(n)
 !
 !  Copy R in.
 !
@@ -344,24 +342,24 @@ subroutine mult_givens ( c, s, k, g )
 !
 !  Parameters:
 !
-!    Input C, S, the cosine and sine of a Givens
+!    C, S, the cosine and sine of a Givens
 !    rotation.
 !
-!    Input K, indicates the location of the first
+!    K, indicates the location of the first
 !    vector entry.
 !
-!    Input/output G(1:K+1), the vector to be modified.
+!    G(1:K+1), the vector to be modified.
 !    On output, the Givens rotation has been applied to entries G(K) and G(K+1).
 !
   implicit none
 
-  integer (kind=si) :: k
+  real    (kind=dp), intent (in)  :: c
+  real    (kind=dp), intent (in)  :: s
+  integer (kind=si), intent (in)  :: k
+  real    (kind=dp), intent (out) :: g(1:k+1)
 
-  real    (kind=dp) :: c
-  real    (kind=dp) :: g(1:k+1)
   real    (kind=dp) :: g1
   real    (kind=dp) :: g2
-  real    (kind=dp) :: s
 
   g1 = c * g(k) - s * g(k+1)
   g2 = s * g(k) + c * g(k+1)
@@ -379,39 +377,44 @@ subroutine pmgmres_ilu_cr ( n, nz_num, ia, ja, a, x, rhs, itr_max, mr, &
 !
 !  Parameters:
 !
-!    Input N, the order of the linear system.
+!    N, the order of the linear system.
 !
-!    Input NZ_NUM, the number of nonzero matrix values.
+!    NZ_NUM, the number of nonzero matrix values.
 !
-!    Input IA(N+1), JA(NZ_NUM), the row and column indices
-!    of the matrix values.  The row vector has been compressed.
+!    IA(N+1), JA(NZ_NUM), the row and column indices of the matrix values.
+!    The row vector has been compressed.
 !
-!    Input A(NZ_NUM), the matrix values.
+!    A(NZ_NUM), the matrix values.
 !
-!    Input/output X(N); on input, an approximation to
-!    the solution.  On output, an improved approximation.
+!    X(N); on input, an approximation to the solution.
+!    On output, an improved approximation.
 !
-!    Input RHS(N), the right hand side of the linear system.
+!    RHS(N), the right hand side of the linear system.
 !
-!    Input ITR_MAX, the maximum number of (outer) 
-!    iterations to take.
+!    ITR_MAX, the maximum number of (outer) iterations to take.
 !
-!    Input MR, the maximum number of (inner) iterations 
-!    to take.  MR must be less than N.
+!    MR, the maximum number of (inner) iterations to take.
+!    MR must be less than N.
 !
-!    Input TOL_ABS, an absolute tolerance applied to the
-!    current residual.
+!    TOL_ABS, an absolute tolerance applied to the current residual.
 !
-!    Input TOL_REL, a relative tolerance comparing the
-!    current residual to the initial residual.
+!    TOL_REL, a relative tolerance comparing the current residual
+!    to the initial residual.
 !
   implicit none
 
-  integer (kind=si) :: mr
-  integer (kind=si) :: n
-  integer (kind=si) :: nz_num
+  integer (kind=si), intent (in)    :: n
+  integer (kind=si), intent (in)    :: nz_num
+  integer (kind=si), intent (in)    :: ia(n+1)
+  integer (kind=si), intent (inout) :: ja(nz_num)
+  real    (kind=dp), intent (inout) :: a(nz_num)
+  real    (kind=dp), intent (inout) :: x(n)
+  real    (kind=dp), intent (in)    :: rhs(n)
+  integer (kind=si), intent (in)    :: itr_max
+  integer (kind=si), intent (in)    :: mr
+  real    (kind=dp), intent (in)    :: tol_abs
+  real    (kind=dp), intent (in)    :: tol_rel
 
-  real    (kind=dp) :: a(nz_num)
   real    (kind=dp) :: av
   real    (kind=dp) :: c(mr+1)
   real    (kind=dp), parameter :: delta = 1.0D-03
@@ -419,12 +422,9 @@ subroutine pmgmres_ilu_cr ( n, nz_num, ia, ja, a, x, rhs, itr_max, mr, &
   real    (kind=dp) :: h(mr+1,mr)
   real    (kind=dp) :: htmp
   integer (kind=si) :: i
-  integer (kind=si) :: ia(n+1)
   integer (kind=si) :: itr
-  integer (kind=si) :: itr_max
   integer (kind=si) :: itr_used
   integer (kind=si) :: j
-  integer (kind=si) :: ja(nz_num)
   integer (kind=si) :: k
   integer (kind=si) :: k_copy
   real    (kind=dp) :: l(ia(n+1)+1)
@@ -432,14 +432,10 @@ subroutine pmgmres_ilu_cr ( n, nz_num, ia, ja, a, x, rhs, itr_max, mr, &
   real    (kind=dp) :: r(n)
   real    (kind=dp) :: rho
   real    (kind=dp) :: rho_tol
-  real    (kind=dp) :: rhs(n)
   real    (kind=dp) :: s(mr+1)
-  real    (kind=dp) :: tol_abs
-  real    (kind=dp) :: tol_rel
   integer (kind=si) :: ua(n)
   real    (kind=dp) :: v(n,mr+1);
   logical, parameter :: verbose = .true.
-  real    (kind=dp) :: x(n)
   real    (kind=dp) :: y(mr+1)
 
   itr_used = 0
@@ -575,28 +571,28 @@ subroutine rearrange_cr ( n, nz_num, ia, ja, a )
 !
 !  Parameters:
 !
-!    Input N, the order of the system.
+!    N, the order of the system.
 !
-!    Input NZ_NUM, the number of nonzeros.
+!    NZ_NUM, the number of nonzeros.
 !
-!    Input IA(N+1), the compressed row indices.
+!    IA(N+1), the compressed row indices.
 !
-!    Input/output JA(NZ_NUM), the column indices.
+!    JA(NZ_NUM), the column indices.
 !    On output, these may have been rearranged by the sorting.
 !
-!    Input/output A(NZ_NUM), the matrix values.  On output,
+!    A(NZ_NUM), the matrix values.  On output,
 !    the matrix values may have been moved somewhat because of the sorting.
 !
   implicit none
 
-  integer (kind=si) :: n
-  integer (kind=si) :: nz_num
+  integer (kind=si), intent (in)    :: n
+  integer (kind=si), intent (in)    :: nz_num
+  integer (kind=si), intent (in)    :: ia(n+1)
+  integer (kind=si), intent (inout) :: ja(nz_num)
+  real    (kind=dp), intent (inout) :: a(nz_num)
 
-  real    (kind=dp) :: a(nz_num)
   integer (kind=si) :: i
-  integer (kind=si) :: ia(n+1)
   integer (kind=si) :: i4temp
-  integer (kind=si) :: ja(nz_num)
   integer (kind=si) :: k
   integer (kind=si) :: l
   real    (kind=dp) :: r8temp
