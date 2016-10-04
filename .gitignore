@@ -1,0 +1,22 @@
+# editor backup
+*~
+
+# editor temporary files
+\#*#
+[._]*.s[a-w][a-z]
+\.\#*
+
+# configuration
+
+# compiler artifacts
+*.dep
+*.mod
+*.o
+*.debug
+*.dSYM
+
+# generated executable
+mgmres_prb
+
+# source-code cross-reference
+TAGS
