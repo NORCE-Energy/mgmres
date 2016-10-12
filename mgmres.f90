@@ -116,7 +116,6 @@
       real    (kind=dp), intent (out) :: w(n)
 
       integer (kind=si) :: i
-      integer (kind=si) :: k
       integer (kind=si) :: k1
       integer (kind=si) :: k2
 
