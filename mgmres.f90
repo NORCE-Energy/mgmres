@@ -457,9 +457,7 @@
 
         call ax_cr ( n, nz_num, ia, ja, a, x, r )
 
-        r(1:n) = rhs(1:n) - r(1:n)
-
-        call lus_cr ( n, nz_num, ia, ja, l, ua, r, r )
+        call lus_cr ( n, nz_num, ia, ja, l, ua, rhs - r, r )
 
         rho = sqrt ( dot_product ( r, r ) )
 
